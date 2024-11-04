@@ -1,5 +1,5 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
-import { type NextRequest, NextResponse } from "next/server";
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export const applyMiddlewareSupabaseClient = async (request: NextRequest) => {
   // Create an unmodified response
@@ -39,7 +39,7 @@ export const applyMiddlewareSupabaseClient = async (request: NextRequest) => {
           // If the cookie is removed, update the cookies for the request and response
           request.cookies.set({
             name,
-            value: "",
+            value: '',
             ...options,
           });
           response = NextResponse.next({
@@ -49,7 +49,7 @@ export const applyMiddlewareSupabaseClient = async (request: NextRequest) => {
           });
           response.cookies.set({
             name,
-            value: "",
+            value: '',
             ...options,
           });
         },
@@ -78,6 +78,9 @@ export const config = {
      * - favicon.ico (favicon file)
      * Feel free to modify this pattern to include more paths.
      */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
+
+// https://supabase.com/docs/guides/getting-started/tutorials/with-nextjs?queryGroups=language&language=ts#supabase-utilities
+// https://github.com/supabase/supabase/blob/master/examples/user-management/nextjs-user-management/middleware.ts

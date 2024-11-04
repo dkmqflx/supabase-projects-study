@@ -1,8 +1,8 @@
-"use server";
+'use server';
 
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
-import { cookies } from "next/headers";
-import { Database } from "types_db";
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { Database } from 'types_db';
 
 // 해당 함수는 서버 컴포넌트에서만 사용해야 한다.
 export const createServerSupabaseClient = async (
@@ -31,7 +31,7 @@ export const createServerSupabaseClient = async (
         },
         remove(name: string, options: CookieOptions) {
           try {
-            cookieStore.set({ name, value: "", ...options });
+            cookieStore.set({ name, value: '', ...options });
           } catch (error) {
             // The `delete` method was called from a Server Component.
             // This can be ignored if you have middleware refreshing
@@ -42,7 +42,10 @@ export const createServerSupabaseClient = async (
     }
   );
 };
+// https://supabase.com/docs/guides/getting-started/tutorials/with-nextjs?queryGroups=language&language=ts#supabase-utilities
+// https://github.com/supabase/supabase/blob/master/examples/user-management/nextjs-user-management/utils/supabase/server.ts
 
+// admin을 true로 전달하고 있기 때문에 admin API를 사용할 수 있다.
 export const createServerSupabaseAdminClient = async (
   cookieStore: ReturnType<typeof cookies> = cookies()
 ) => {

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Checkbox, IconButton, Spinner } from "@material-tailwind/react";
-import { useMutation } from "@tanstack/react-query";
-import { deleteTodo, updateTodo } from "actions/todo-actions";
-import { queryClient } from "config/ReactQueryClientProvider";
-import { useState } from "react";
+import { Checkbox, IconButton, Spinner } from '@material-tailwind/react';
+import { useMutation } from '@tanstack/react-query';
+import { deleteTodo, updateTodo } from 'actions/todo-actions';
+import { queryClient } from 'config/ReactQueryClientProvider';
+import { useState } from 'react';
 
 export default function Todo({ todo }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -21,9 +21,10 @@ export default function Todo({ todo }) {
     onSuccess: () => {
       setIsEditing(false);
       queryClient.invalidateQueries({
-        queryKey: ["todos"],
+        queryKey: ['todos'],
       });
       // invalidate 하면 todos라는 queryKey가 다시 refetch 된다
+      // https://github.com/dkmqflx/TIL/blob/master/React/removeQueries%2C%20resetQueries%2C%20invalideQueries.md
     },
   });
 
@@ -31,7 +32,7 @@ export default function Todo({ todo }) {
     mutationFn: () => deleteTodo(todo.id),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["todos"],
+        queryKey: ['todos'],
       });
     },
   });
@@ -53,7 +54,7 @@ export default function Todo({ todo }) {
           onChange={(e) => setTitle(e.target.value)}
         />
       ) : (
-        <p className={`flex-1 ${completed && "line-through"}`}>{title}</p>
+        <p className={`flex-1 ${completed && 'line-through'}`}>{title}</p>
       )}
 
       {isEditing ? (
