@@ -1,6 +1,6 @@
-"use server";
+'use server';
 
-import { createServerSupabaseClient } from "utils/supabase/server";
+import { createServerSupabaseClient } from 'utils/supabase/server';
 
 function handleError(error) {
   if (error) {
@@ -29,7 +29,7 @@ export async function uploadFile(formData: FormData) {
   return results;
 }
 
-export async function searchFiles(search: string = "") {
+export async function searchFiles(search: string = '') {
   const supabase = await createServerSupabaseClient();
 
   const { data, error } = await supabase.storage
@@ -37,6 +37,7 @@ export async function searchFiles(search: string = "") {
     .list(null, {
       search,
     });
+  // https://supabase.com/docs/reference/javascript/storage-from-list
 
   handleError(error);
 
@@ -48,7 +49,7 @@ export async function deleteFile(fileName: string) {
 
   const { data, error } = await supabase.storage
     .from(process.env.NEXT_PUBLIC_STORAGE_BUCKET)
-    .remove([fileName]);
+    .remove([fileName]); // 배열 형태로 전달받아 한번에 여러 파일을 제거할 수 있다
 
   handleError(error);
 
