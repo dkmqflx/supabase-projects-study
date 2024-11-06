@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import MovieCard from "./movie-card";
-import { searchMovies } from "actions/movieActions";
-import { Spinner } from "@material-tailwind/react";
-import { useEffect } from "react";
-import { useRecoilValue } from "recoil";
-import { searchState } from "utils/recoil/atoms";
-import { useInView } from "react-intersection-observer";
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import MovieCard from './movie-card';
+import { searchMovies } from 'actions/movieActions';
+import { Spinner } from '@material-tailwind/react';
+import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import { searchState } from 'utils/recoil/atoms';
+import { useInView } from 'react-intersection-observer';
 
 export default function MovieCardList() {
   const search = useRecoilValue(searchState);
@@ -15,13 +15,14 @@ export default function MovieCardList() {
   const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
       initialPageParam: 1,
-      queryKey: ["movie", search],
+      queryKey: ['movie', search],
       queryFn: ({ pageParam }) =>
         searchMovies({ search, page: pageParam, pageSize: 12 }),
       getNextPageParam: (lastPage) =>
-        lastPage.page ? lastPage.page + 1 : null,
+        lastPage.page ? lastPage.page + 1 : null, // 반환되는 값이 hasNextPage가 된다
     });
 
+  // https://www.npmjs.com/package/react-intersection-observer
   const { ref, inView } = useInView({
     threshold: 0,
   });
@@ -44,6 +45,7 @@ export default function MovieCardList() {
           {data?.pages
             ?.map((page) => page.data)
             ?.flat() // array를 flatten 해주기 위한 함수
+            // [[{1}, {2}], [{3}, {4}]] -> [{1}, {2}, {3}, {4}]
             ?.map((movie) => (
               <MovieCard key={movie.id} movie={movie} />
             ))}

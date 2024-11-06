@@ -1,6 +1,7 @@
-import { getMovie } from "actions/movieActions";
-import UI from "./ui";
+import { getMovie } from 'actions/movieActions';
+import UI from './ui';
 
+// 동적으로 메타 데이터를 만들어준다
 export async function generateMetadata({ params, searchParams }) {
   const movie = await getMovie(params.id);
 
