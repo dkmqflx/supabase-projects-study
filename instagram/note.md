@@ -81,3 +81,21 @@ const channel = supabase.channel("online_users", {
 - 감사합니다.
 
 - https://velog.io/@dev_leewoooo/supabase%EC%97%90-Customer-SMTP-Provider-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0-with-Resend
+
+<br/>
+
+## (선택수강) 채팅 화면 구현
+
+### Q. 유효성 검사 누락된 부분...
+
+- 회원가입과 로그인 기능에서 이메일 형식과 비밀번호 최소 길이 등에 대한 유효성 검사를 추가해 주실 수 있는지 궁금합니다.
+
+- 현재 학습 중인데, 이 부분에 대한 자료를 추가로 올려주시면 감사드리겠습니다.
+
+### A.
+
+- 아 네네! 해당 부분은 Yup라는 라이브러리와 formik을 사용하시면 더 좋은 코드를 작성하실 수 있어요 😄 해당 부분은 시간이 되면 보충강의로 작성해서 업로드 해드리겠습니다.
+
+  - https://github.com/lopun/inflearn-supabase-instagram-clone/commit/2cbd87cbc312a05361e75086d98f64f93f5ea1dd
+
+- signup쪽만 유효성 검사를 추가해보았습니다. 참고하셔서 리팩토링 진행 부탁드립니다 😉
