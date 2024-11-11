@@ -31,6 +31,24 @@ export default function SignIn({ setView }) {
     },
   });
 
+  // 카카오 로그인 함수
+  const signInWithKakao = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'kakao',
+      options: {
+        redirectTo: process.env.NEXT_PUBLIC_VERCEL_URL
+          ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/auth/callback`
+          : 'http://localhost:3000/auth/callback',
+      },
+    });
+    // 카카오 로그인 버튼을 눌렀을 때
+    // 1. 카카오 로그인 서버를 갔다가
+    // 2. supabase 서버를 갔다가
+    // 3, 나의 사이트로 돌아온다.
+
+    console.log(data);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="pt-10 pb-6 px-10 w-full flex flex-col items-center justify-center max-w-lg border border-gray-400 bg-white gap-2">
@@ -59,6 +77,12 @@ export default function SignIn({ setView }) {
           className="w-full text-md py-1"
         >
           로그인
+        </Button>
+        <Button
+          className="w-full text-md py-1 bg-yellow-700"
+          onClick={() => signInWithKakao()}
+        >
+          카카오 로그인
         </Button>
       </div>
 

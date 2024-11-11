@@ -62,6 +62,25 @@ export default function SignUp({ setView }) {
     },
   });
 
+  // 카카오 로그인 함수
+  const signInWithKakao = async () => {
+    // signInWithOAuth 함수는 계정이 없으면 무조건 만들게 되어있기 때문에 signup을 위해서 별도로 구현해줄 필요가 없다
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'kakao',
+      options: {
+        redirectTo: process.env.NEXT_PUBLIC_VERCEL_URL
+          ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/auth/callback`
+          : 'http://localhost:3000/auth/callback',
+      },
+    });
+    // 카카오 로그인 버튼을 눌렀을 때
+    // 1. 카카오 로그인 서버를 갔다가
+    // 2. supabase 서버를 갔다가
+    // 3, 나의 사이트로 돌아온다.
+
+    console.log(data);
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <div className="pt-10 pb-6 px-10 w-full flex flex-col items-center justify-center max-w-lg border border-gray-400 bg-white gap-2">
@@ -119,6 +138,13 @@ export default function SignUp({ setView }) {
           className="w-full text-md py-1"
         >
           {confirmationRequired ? '인증하기' : '가입하기'}
+        </Button>
+
+        <Button
+          className="w-full text-md py-1 bg-yellow-700"
+          onClick={() => signInWithKakao()}
+        >
+          카카오 로그인
         </Button>
       </div>
 
