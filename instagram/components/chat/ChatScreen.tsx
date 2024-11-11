@@ -11,15 +11,71 @@ import {
 } from 'utils/recoil/atoms';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getAllMessages, getUserById, sendMessage } from 'actions/chatActions';
+import { getUserById } from 'actions/chatActions';
 import { createBrowserSupabaseClient } from 'utils/supabase/client';
+
+// RLS의 핵심은 서버사이드가 아니라 클라이언트 사이드에서 supabase를 접근할 때, 권한에 맞게 동작하도록 하는 것
+// 서버 액션닝 아닌 아래처럼 클라이언트 사이드에서 작동하는 함수를 정의해준다
+// sendMessage, getAllMessages
+export async function sendMessage({ message, chatUserId }) {
+  const supabase = createBrowserSupabaseClient();
+
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.getSession();
+
+  if (error || !session.user) {
+    throw new Error('User is not authenticated');
+  }
+
+  const { data, error: sendMessageError } = await supabase
+    .from('message')
+    .insert({
+      message,
+      receiver: chatUserId,
+      // sender: session.user.id,
+      // supabase에서 기본 값을 현재 로그인한 유저로 변경했다.
+      // 따라서 해당 필드에 아무것도 보내지 않아도 된다.
+      // auth.uid()
+    });
+
+  if (sendMessageError) {
+    throw new Error(sendMessageError.message);
+  }
+
+  return data;
+}
+
+export async function getAllMessages({ chatUserId }) {
+  const supabase = createBrowserSupabaseClient();
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.getSession();
+
+  if (error || !session.user) {
+    throw new Error('User is not authenticated');
+  }
+
+  const { data, error: getMessagesError } = await supabase
+    .from('message')
+    .select('*')
+    .or(`receiver.eq.${chatUserId},receiver.eq.${session.user.id}`)
+    .or(`sender.eq.${chatUserId},sender.eq.${session.user.id}`)
+    .order('created_at', { ascending: true });
+
+  if (getMessagesError) {
+    return [];
+  }
+
+  return data;
+}
 
 export default function ChatScreen({}) {
   const selectedUserId = useRecoilValue(selectedUserIdState);
   const selectedUserIndex = useRecoilValue(selectedUserIndexState);
-
   const [message, setMessage] = useState('');
-
   const supabase = createBrowserSupabaseClient();
   const presence = useRecoilValue(presenceState);
 
@@ -28,7 +84,6 @@ export default function ChatScreen({}) {
     queryFn: () => getUserById(selectedUserId),
   });
 
-  // 메세지 보내는 mutation
   const sendMessageMutation = useMutation({
     mutationFn: async () => {
       return sendMessage({
@@ -36,9 +91,8 @@ export default function ChatScreen({}) {
         chatUserId: selectedUserId,
       });
     },
-
     onSuccess: () => {
-      setMessage(''); // 기존의 메세지는 초기화
+      setMessage('');
       getAllMessagesQuery.refetch();
     },
   });
@@ -48,10 +102,7 @@ export default function ChatScreen({}) {
     queryFn: () => getAllMessages({ chatUserId: selectedUserId }),
   });
 
-  // 상대방이 메시지를 보냈을 때 내 채팅창에서 해당 메세지가 보일 수 있도록 하는 기능
   useEffect(() => {
-    // channel의 역할은 어떤 채널에서 이벤트를 들을 것인지 지정해주는 부분
-    // 이름은 아무거나 지어도 된다
     const channel = supabase
       .channel('message_postgres_changes')
       .on(
@@ -63,12 +114,11 @@ export default function ChatScreen({}) {
         },
         (payload) => {
           if (payload.eventType === 'INSERT' && !payload.errors) {
-            // 메세지가 들어오면 query를 refetch 한다.
             getAllMessagesQuery.refetch();
           }
         }
       )
-      .subscribe(); // subscribe를 해주어야 한다.
+      .subscribe();
 
     return () => {
       channel.unsubscribe();
