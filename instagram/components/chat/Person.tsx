@@ -36,7 +36,8 @@ export default function Person({
       <div>
         <p className="text-black font-bold text-lg">{name}</p>
         <p className="text-gray-500 text-sm">
-          {timeAgo.format(Date.parse(onlineAt))}
+          {/* 로그아웃 되어 있으면 아무것도 나타나지 않는다 */}
+          {onlineAt && timeAgo.format(Date.parse(onlineAt))}
         </p>
       </div>
     </div>

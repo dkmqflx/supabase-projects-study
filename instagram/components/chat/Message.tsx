@@ -1,6 +1,7 @@
 'use client';
 
 export default function Message({ isFromMe, message }) {
+  // isFromMe => 내가 보낸 메세지
   return (
     <div
       className={`w-fit p-3 rounded-md ${

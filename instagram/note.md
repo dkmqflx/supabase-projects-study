@@ -99,3 +99,33 @@ const channel = supabase.channel("online_users", {
   - https://github.com/lopun/inflearn-supabase-instagram-clone/commit/2cbd87cbc312a05361e75086d98f64f93f5ea1dd
 
 - signup쪽만 유효성 검사를 추가해보았습니다. 참고하셔서 리팩토링 진행 부탁드립니다 😉
+
+<br/>
+
+## Realtime Part 1 - 실시간 채팅 구현
+
+### Q. 채팅 관련 부분, useInfiniteQuery
+
+- 안녕하세요, 채팅 관련 부분에, reverseInfiniteQuery를 적용할 수 있을 것 같아, 도전해보던 찰나에 잘 안되어서 질문드립니다!!
+
+- 혹시 역무한스크롤 방식으로 할 수 있는 방법이 있을까요??
+
+- 보통 실무에서 채팅을 어떠한 방식으로 구현하는지 매우 궁금합니다.
+
+1. 역무한 스크롤 방식
+
+2. 계속해서 refetch를 하는 방식
+
+### A.
+
+- 안녕하세요 김용민님! 답변이 늦어져 죄송합니다. 해결이 안된 질문이 있는지 모르고 있었네요 🙀
+
+- 우선 reverseInfiniteQuery가 react-query에서 공식적으로 지원되지 않는 함수처럼 보이는데 혹시 해당 함수에 대한 설명을 따로 받아볼 수 있을까요?
+
+- 역무한스크롤의 경우 별도의 함수가 필요한 작업은 아니어보이고, 스크롤 인식과 최상위 컴포넌트가 화면상에 렌더링 되었는지 인식하도록 intersection observer를 작업해주시면 될 것 같습니다 😄
+
+- refetch의 경우 최적화를 질문주신 것 같은데, infinite scroll 최적화 관련 좋은 아티클이 2개가 있어서 같이 공유드려요! 카카오 엔터프라이즈에서 나온 아티클을 best practice로 보시면서 공부해보시는 것을 추천드립니다 ㅎㅎ
+
+- https://tech.kakaoenterprise.com/149
+
+- https://bttrthn-ystrdy.tistory.com/139
